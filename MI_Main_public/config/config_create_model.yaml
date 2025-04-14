@@ -1,0 +1,44 @@
+# 特徴量エンジニアリング
+feature_engineering:  # 何も書かない
+  # クレンジング手法の選択
+  cleansing:  # 何も書かない
+    # 何をするか指定 ('Val', 'Val_Corr', 'Chi_Square', 'ANOVA', 'Stepwise_OLS', 'Lasso', 'ElasticNet')
+    method: Stepwise_OLS
+    # 同じ値の割合の閾値を設定
+    same_value_threshold: 0.99
+    # 相関係数の閾値を設定
+    correlation_coefficient_threshold: 0.99
+    # カイ二乗検定のp値の閾値を設定
+    p_value_of_chi_square: 0.01
+    # ANOVAのp値の閾値を設定
+    p_value_of_ANOVA: 0.01
+    # OLS_inのp値の閾値を設定(outの方が大きくなる)
+    p_value_of_OLS_in: 0.01
+    # OLS_outのp値の閾値を設定(outの方が大きくなる)
+    p_value_of_OLS_out: 0.05
+    
+learning:  # 何も書かない
+  # スケーリング手法の選択
+  scaler_X: S_Standard
+  scaler_y: U_Standard
+  # ハイパーパラメータを決定するクロスバリデーション法の指定, LOO or k-Fold
+  cross_validation: k-Fold
+  # フォールド数の指定
+  k-Fold: 10
+  # 損失関数の指定(MAE, MSE, RMSE, RMSLE, R2)
+  loss_function: MAE
+  # ハイパーパラメータチューニング法, Grid, Bayes
+  param_search: Grid
+  # Bayes最適化を用いる場合のイテレーション数(増やすと時間がかかるけど、小さいと収束しているかわからない...)
+  # BayesもしくはOptunaを選択した場合に、以下の数字が適用される
+  Bayes_n_iter: 20
+  # オプション, PLS, SMOTE, SMOTER(たぶん使わない) 
+  option: None
+  # Normal, Borderline, SVM, ADASYN
+  SMOTE: Borderline
+  # SMOTEの閾値
+  SMOTE_threshold: 90
+  # PLS成分数
+  PLS_components: 3
+  # ランダムシード
+  random_state: 0

@@ -1,0 +1,195 @@
+# 特徴量エンジニアリング
+feature_engineering:  # 何も書かない
+  # クレンジング手法の選択
+  cleansing:  # 何も書かない
+    # 何をするか指定 ('Val', 'Val_Corr', 'Chi_Square', 'ANOVA', 'Stepwise_OLS', 'Lasso')
+    method: Stepwise_OLS
+    # 同じ値の割合の閾値を設定
+    same_value_threshold: 0.99
+    # 相関係数の閾値を設定
+    correlation_coefficient_threshold: 0.99
+    # カイ二乗検定のp値の閾値を設定
+    p_value_of_chi_square: 0.01
+    # ANOVAのp値の閾値を設定
+    p_value_of_ANOVA: 0.01
+    # OLS_inのp値の閾値を設定(outの方が大きくなる)
+    p_value_of_OLS_in: 0.01
+    # OLS_outのp値の閾値を設定(outの方が大きくなる)
+    p_value_of_OLS_out: 0.05
+learning:  # 何も書かない
+  # スケーリング手法の選択
+  scaler_X: S_Standard
+  scaler_y: U_Standard
+  # クロスバリデーション法の指定
+  cross_validation: DCV
+  # ダブルクロスバリデーションの場合, 外部および内部クロスバリデーション法の指定
+  DCV:  # 何も書かない
+    # 外部クロスバリデーション（モデルの評価用）
+    - LOO
+    # 内部クロスバリデーション（ハイパーパラメータの決定用）
+    - k-Fold_2
+  # フォールド数の指定
+  k-Fold: 10
+  # フォールド数の指定, k-FoldをDCVで2回使う場合に使用する。
+  k-Fold_2: 10
+  # 損失関数の指定
+  loss_function: MAE
+  # ハイパーパラメータチューニング法, Grid, Bayes
+  param_search: Grid
+  # Bayes最適化を用いる場合のイテレーション数(増やすと時間がかかるけど、小さいと収束しているかわからない...)
+  # BayesもしくはOptunaを選択した場合に、以下の数字が適用される
+  Bayes_n_iter: 30
+  # オプション, PLS, SMOTE
+  option: None
+  # Normal, Borderline, SVM, ADASYN
+  # Borderlineはフィンガープリントには使えない（float型の特徴量を生成してしまうから？）
+  SMOTE: Normal
+  # SMOTEの閾値
+  SMOTE_threshold: 600
+  # PLS成分数
+  PLS_components: 3
+  # ランダムシード
+  random_state: 0
+
+
+# これより下は基本的には編集せずに使う。
+# 細かいパラメータ等を変更したい時は、該当箇所を編集。
+
+params:  # 何も書かない
+  # Ridge回帰のハイパーパラメータ
+  Ridge:  # 何も書かない
+    # チューニングするハイパーパラメータ。
+    alpha:  # 何も書かない
+      # pd.linspaceかpd.logspaceか
+      linspace_or_logspace: logspace
+      # linespaceの場合いくつからいくつまでか, logspaceの場合何乗から何乗までか。
+      start: -10
+      stop: 10
+      # linspaceの場合はパラメータ数, logspaceの場合は底
+      num_or_base: 2
+  Lasso:
+    alpha:
+      linspace_or_logspace: logspace
+      start: -10
+      stop: 10
+      num_or_base: 2
+  ElasticNet:
+    alpha:
+      linspace_or_logspace: logspace
+      start: -10
+      stop: 10
+      num_or_base: 2
+    l1_ratio:
+      linspace_or_logspace: linspace
+      start: 0
+      stop: 1
+      num_or_base: 11
+  SVR:
+    C:
+      linspace_or_logspace: logspace
+      start: -5
+      stop: 5
+      num_or_base: 2
+    epsilon:
+      linspace_or_logspace: logspace
+      start: -10
+      stop: 0
+      num_or_base: 2
+  RF:
+    n_estimators:
+      linspace_or_logspace: linspace
+      start: 100
+      stop: 1500
+      num_or_base: 15
+    max_depth:
+      linspace_or_logspace: linspace
+      start: 10
+      stop: 50
+      num_or_base: 5
+  kNN:
+    n_neighbors:
+      linspace_or_logspace: linspace
+      start: 3
+      stop: 15
+      num_or_base: 7
+    weights: # いじらない
+      - uniform
+      - distance
+    metric: # いじらない
+      - minkowski
+      - euclidean
+      - manhattan
+  GBR:
+    n_estimators:
+      linspace_or_logspace: linspace
+      start: 100
+      stop: 1500
+      num_or_base: 15
+    learning_rate:
+      linspace_or_logspace: logspace
+      start: -4
+      stop: -1
+      num_or_base: 10
+    max_depth:
+      linspace_or_logspace: linspace
+      start: 10
+      stop: 50
+      num_or_base: 5
+  XGBoost:
+    n_estimators:
+      linspace_or_logspace: linspace
+      start: 100
+      stop: 1500
+      num_or_base: 15
+    learning_rate:
+      linspace_or_logspace: logspace
+      start: -4
+      stop: -1
+      num_or_base: 10
+    max_depth:
+      linspace_or_logspace: linspace
+      start: 10
+      stop: 50
+      num_or_base: 5
+    min_child_weight:
+      linspace_or_logspace: linspace
+      start: 1
+      stop: 7
+      num_or_base: 4
+    subsample:
+      linspace_or_logspace: linspace
+      start: 0.6
+      stop: 1.0
+      num_or_base: 5
+  LightGBM:
+    n_estimators:
+      linspace_or_logspace: linspace
+      start: 100
+      stop: 1500
+      num_or_base: 15
+    learning_rate:
+      linspace_or_logspace: logspace
+      start: -4
+      stop: -1
+      num_or_base: 10
+    max_depth:
+      linspace_or_logspace: linspace
+      start: 10
+      stop: 50
+      num_or_base: 5
+    num_leaves:
+      linspace_or_logspace: linspace
+      start: 10
+      stop: 100
+      num_or_base: 10
+    subsample:
+      linspace_or_logspace: linspace
+      start: 0.6
+      stop: 1.0
+      num_or_base: 5
+    colsample_bytree:
+      linspace_or_logspace: linspace
+      start: 0.6
+      stop: 1.0
+      num_or_base: 5
+    
